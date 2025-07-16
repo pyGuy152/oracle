@@ -1,4 +1,5 @@
 import discord
+from utils import askAI, sqlQuery
 
 class EnrollModal(discord.ui.Modal):
     def __init__(self, *args, **kwargs) -> None:
@@ -35,7 +36,7 @@ class EnrollModal(discord.ui.Modal):
         self.add_item(discord.ui.TextInput(
             label="Anything else you want to share?",
             placeholder="e.g., I have a girlfriend, I have held a human heart before",
-            style=discord.TextStyle.paragraph, 
+            style=discord.TextStyle.paragraph,
             required=False,
             max_length=500
         ))
@@ -46,7 +47,8 @@ class EnrollModal(discord.ui.Modal):
         quirky_fact = self.children[2].value
         physical_traits = self.children[3].value
         additional_facts = self.children[4].value
-        
+        response = eval(askAI(f'Process the following raw user input into a JSON object. The JSON should have the following keys: "hobbies", "server_activities", "quirky_fact", "physical_traits", and "additional_facts". Each key\'s value should be a list of strings. Also only send the json file back. \n\n Raw user input:\nHobbies: {hobbies}\nserver_activites: {server_activites}\nquirky_fact: {quirky_fact}\nphysical_traits: {physical_traits}\nadditional_facts: {additional_facts}'))
+        print(response)
         embed = discord.Embed(
             title="Enrollment Complete!",
             description="Thanks for enrolling! Here's what I gathered:",
