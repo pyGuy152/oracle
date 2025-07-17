@@ -47,7 +47,7 @@ async def guess(interaction: discord.Interaction):
     if not enrolled_people:
         await interaction.followup.send("No one is enrolled in this server. Please use the /enroll command to enroll yourself.")
         return
-    data = ["hobbies","server_activities","quirky_fact","physical_traits","additional_facts","hobbies","server_activities","quirky_fact","hobbies","server_activities","quirky_fact"]
+    data = ["hobbies","server_activities","quirky_fact","hobbies","server_activities","quirky_fact","hobbies","server_activities","quirky_fact","physical_traits","additional_facts"]
     for i in data:
         traits = []
         for person in enrolled_people:
