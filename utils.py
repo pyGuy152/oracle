@@ -29,15 +29,15 @@ def sqlQuery(sql: str, params: tuple = (), fetch: int = 0):
             print(f"Error connecting to DB: {e}")
             time.sleep(5)
     try:
-        if fetch > 1:
+        if fetch == "all":
+            cur.execute(f"{sql}",params)
+            out = cur.fetchall()
+        elif fetch > 1:
             cur.execute(f"{sql} LIMIT {fetch};",params)
             out = cur.fetchall()
         elif fetch == 1:
             cur.execute(f"{sql}",params)
             out = cur.fetchone()
-        elif fetch == "all":
-            cur.execute(f"{sql}",params)
-            out = cur.fetchall()
         else:
             cur.execute(f"{sql}",params)
             out = None
