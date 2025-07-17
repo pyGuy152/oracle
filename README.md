@@ -11,6 +11,10 @@
 #### /guess - this starts the main game where the bot asks you questions and tries to guess the person you are thinking about
 #### /ping - checks if the server is up by returning "pong!"
 
+## Tech Stack
+#### python
+#### postgres
+
 ## Runing the bot yourself 
 First you need to make a .env file with the following 
 ``` env
