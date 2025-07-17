@@ -1,4 +1,4 @@
-import discord, json
+import discord, json  # type: ignore
 from utils import askAI, sqlQuery
 
 class EnrollModal(discord.ui.Modal):
@@ -60,7 +60,10 @@ class EnrollModal(discord.ui.Modal):
         if data == "none":
             await interaction.response.send_message("Try again later", ephemeral=True)
             return
-        
+        add = sqlQuery("INSERT INTO user_data (userid, server_id, hobbies, server_activities, quirky_fact, physical_traits, additional_facts) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING *;",(interaction.user.id, interaction.guild.id, data['hobbies'], data['server_activities'], data['quirky_fact'], data['physical_traits'], data['additional_facts']), fetch=1)
+        if not add:
+            await interaction.response.send_message("You are already enrolled", ephemeral=True)
+            return
         embed = discord.Embed(
             title="Enrollment Complete!",
             description="Thanks for enrolling! Here's what I gathered:",
