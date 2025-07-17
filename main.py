@@ -1,5 +1,5 @@
 import discord, os, asyncio # type: ignore
-from modal import EnrollModal
+from modal import EnrollModal, MyView
 from dotenv import load_dotenv # type: ignore
 from utils import sqlQuery
 from collections import Counter
@@ -71,23 +71,23 @@ async def guess(interaction: discord.Interaction):
                 if diff < best_diff:
                     best_diff = diff
                     best_trait = trait
-
-            await interaction.followup.send(f"Does your persons {i} include {best_trait}? (y/n)")
+            view = MyView()
+            view.add_item(discord.ui.Button(label="Yes", style=discord.ButtonStyle.primary, custom_id=f"yes"))
+            view.add_item(discord.ui.Button(label="No", style=discord.ButtonStyle.danger, custom_id=f"no"))
+            await interaction.followup.send(f"Does your persons {i} include {best_trait}?", view=view)
             try:
-                msg = await bot.wait_for('message', check=check, timeout=30)
+                interaction_response = await bot.wait_for('interaction', timeout=30.0, check=lambda i: i.data['custom_id'].startswith(('yes', 'no')) and i.user == interaction.user)
+                if interaction_response.data['custom_id'] == 'yes':
+                    for person in enrolled_people:
+                        if best_trait not in person[i]:
+                            enrolled_people.remove(person)
+                elif interaction_response.data['custom_id'] == 'no':
+                    for person in enrolled_people:
+                        if best_trait in person[i]:
+                            enrolled_people.remove(person)
+                await interaction_response.response.defer() # no clue what this does but it is needed to prevent the interaction from timing out - says ai
             except asyncio.TimeoutError:
-                await interaction.followup.send("You took too long to respond. Please try again.", ephemeral=True)
-                return
-            if msg.content.lower() == 'y' or msg.content.lower() == 'yes':
-                for person in enrolled_people:
-                    if best_trait not in person[i]:
-                        enrolled_people.remove(person)
-            elif msg.content.lower() == 'n' or msg.content.lower() == 'no':
-                for person in enrolled_people:
-                    if best_trait in person[i]:
-                        enrolled_people.remove(person)
-            else:
-                await interaction.followup.send("Invalid response. Please respond with 'y' or 'n'.", ephemeral=True)
+                await interaction.followup.send("You took too long to respond. Please start again.")
                 return
     await interaction.followup.send("Im sorry I coudnt guess the person you were thinking about")
 

@@ -83,3 +83,8 @@ class EnrollModal(discord.ui.Modal):
 
         embed.add_field(name="",value="Your data is secure and safe and you can always remove it using the /forgetme command.",inline=False)
         await interaction.response.send_message(embeds=[embed], ephemeral=True)
+
+class MyView(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.timeout = 60
