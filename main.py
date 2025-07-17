@@ -72,7 +72,7 @@ async def guess(interaction: discord.Interaction):
             view = MyView()
             view.add_item(discord.ui.Button(label="Yes", style=discord.ButtonStyle.primary, custom_id=f"yes"))
             view.add_item(discord.ui.Button(label="No", style=discord.ButtonStyle.danger, custom_id=f"no"))
-            await interaction.followup.send(f"Does your persons {i} include {best_trait}?", view=view)
+            await interaction.followup.send(f"Does your person's {i} include {best_trait}?", view=view)
             try:
                 interaction_response = await bot.wait_for('interaction', timeout=30.0, check=lambda i: i.data['custom_id'].startswith(('yes', 'no')) and i.user == interaction.user)
                 if interaction_response.data['custom_id'] == 'yes':
