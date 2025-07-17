@@ -42,8 +42,6 @@ async def ping(interaction: discord.Interaction):
 
 @tree.command(name="guess", description="Start the oracle guessing game (Like akinator)")
 async def guess(interaction: discord.Interaction):
-    def check(m):
-        return m.author == interaction.user and m.channel == interaction.channel
     await interaction.response.send_message("Ok! Lets start the game! But before we start if you havent used the /enroll command to allow yourself to be guessed, please do so.")
     enrolled_people = sqlQuery("SELECT * FROM user_data WHERE server_id = %s;", (interaction.guild.id,), fetch="all")
     if not enrolled_people:
