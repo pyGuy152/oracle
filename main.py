@@ -1,6 +1,7 @@
 import discord, os
 from modal import EnrollModal
 from dotenv import load_dotenv
+from utils import sqlQuery
 
 # Discord
 load_dotenv()

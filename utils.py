@@ -1,6 +1,6 @@
 from psycopg2 import Error
 from psycopg2.extras import RealDictCursor
-import time, psycopg2, requests, time
+import time, psycopg2, requests, time, os
 from dotenv import load_dotenv
 
 load_dotenv()

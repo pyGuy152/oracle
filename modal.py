@@ -1,4 +1,4 @@
-import discord
+import discord, json
 from utils import askAI, sqlQuery
 
 class EnrollModal(discord.ui.Modal):
@@ -47,8 +47,20 @@ class EnrollModal(discord.ui.Modal):
         quirky_fact = self.children[2].value
         physical_traits = self.children[3].value
         additional_facts = self.children[4].value
-        response = eval(askAI(f'Process the following raw user input into a JSON object. The JSON should have the following keys: "hobbies", "server_activities", "quirky_fact", "physical_traits", and "additional_facts". Each key\'s value should be a list of strings. Also only send the json file back. \n\n Raw user input:\nHobbies: {hobbies}\nserver_activites: {server_activites}\nquirky_fact: {quirky_fact}\nphysical_traits: {physical_traits}\nadditional_facts: {additional_facts}'))
-        print(response)
+        data = "none"
+        for i in range(3):
+            try:
+                response = askAI(f'Process the following raw user input into a JSON object. The JSON should have the following keys: "hobbies", "server_activities", "quirky_fact", "physical_traits", and "additional_facts". Each key\'s value should be a list of strings. Also only send the json back and try to be general like something others might also have/do. MAKE EVERYTHING LOWERCASE AND ONLY ONE WORD PER ELEMENT IN THE LIST. \n\n Raw user input:\nHobbies: {hobbies}\nserver_activites: {server_activites}\nquirky_fact: {quirky_fact}\nphysical_traits: {physical_traits}\nadditional_facts: {additional_facts}')
+                response = response.replace("```json","")
+                response = response.replace("``` json", "")
+                response = response.replace("```","")
+                data = json.loads(response)
+            except:
+                print(f"Trying again, {i+1} time")
+        if data == "none":
+            await interaction.response.send_message("Try again later", ephemeral=True)
+            return
+        
         embed = discord.Embed(
             title="Enrollment Complete!",
             description="Thanks for enrolling! Here's what I gathered:",
